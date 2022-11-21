@@ -74,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
                             String plantName = (String) potDTO.get(i).getPlantName();
                             Integer period = (Integer) potDTO.get(i).getPeriod();
                             String imageUrl = (String) potDTO.get(i).getImageUrl();
-                            LocalDateTime wateringDate = (LocalDateTime) potDTO.get(i).getWateringDate();
+                            LocalDateTime[] wateringDates = (LocalDateTime[]) potDTO.get(i).getWateringDates();
 
                             if(SerialList.contains(serialId)) {
-                                fragments.add(PotFragment.newInstance(serialId, humidity, soil_humidity, temper, waterLevel, potName, plantName, period, imageUrl, wateringDate));
+                                fragments.add(PotFragment.newInstance(serialId, humidity, soil_humidity, temper, waterLevel, potName, plantName, period, imageUrl, wateringDates));
                             }
                             viewPager2.setAdapter(viewPager2Adapter);
                             indicator.setViewPager(viewPager2);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                                     String plantName = (String) potDTO.get(i).getPlantName();
                                                     Integer period = (Integer) potDTO.get(i).getPeriod();
                                                     String imageUrl = (String) potDTO.get(i).getImageUrl();
-                                                    LocalDateTime wateringDate = (LocalDateTime) potDTO.get(i).getWateringDate();
+                                                    LocalDateTime[] wateringDates = (LocalDateTime[]) potDTO.get(i).getWateringDates();
 
                                                     try {
                                                         FileOutputStream fos = openFileOutput("serial.txt", MODE_APPEND);
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                                                         e.printStackTrace();
                                                     }
 
-                                                    fragments.add(PotFragment.newInstance(serialId, humidity, soil_humidity, temper, waterLevel, potName, plantName, period, imageUrl, wateringDate));
+                                                    fragments.add(PotFragment.newInstance(serialId, humidity, soil_humidity, temper, waterLevel, potName, plantName, period, imageUrl, wateringDates));
                                                 }
 
                                                 //뷰페이저 적용
@@ -189,11 +189,17 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+                dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
                 dialog.show();
             }
         });
-
-
+        viewPager2.setAdapter(viewPager2Adapter);;
+        indicator.setViewPager(viewPager2);
     }
 
 }

@@ -34,9 +34,9 @@ public class PotDTO
     @SerializedName("imageUrl")
     @Expose
     private String imageUrl;
-    @SerializedName("wateringDate")
+    @SerializedName("wateringDates")
     @Expose
-    private LocalDateTime wateringDate;
+    private LocalDateTime[] wateringDates;
 
     public String getSerialId() {
         return serialId;
@@ -110,10 +110,10 @@ public class PotDTO
         this.imageUrl = imageUrl;
     }
 
-    public LocalDateTime getWateringDate() { return wateringDate; }
+    public LocalDateTime[] getWateringDates() { return wateringDates; }
 
-    public void setWateringDate(LocalDateTime wateringDate) {
-        this.wateringDate = wateringDate;
+    public void setWateringDates(LocalDateTime[] wateringDates) {
+        this.wateringDates = wateringDates;
     }
 
 
@@ -123,6 +123,6 @@ public class PotDTO
     @Override
     public String toString()
     {
-        return "PotDTO [period = "+period+", serialId = "+serialId+", temper = "+temper+", imageUrl = "+imageUrl+", soil_humidity = "+soil_humidity+", humidity = "+humidity+", waterLevel = "+waterLevel+", potName = "+potName+", plantName = "+plantName+", wateringDate = "+wateringDate+"]";
+        return "PotDTO [period = "+period+", serialId = "+serialId+", temper = "+temper+", imageUrl = "+imageUrl+", soil_humidity = "+soil_humidity+", humidity = "+humidity+", waterLevel = "+waterLevel+", potName = "+potName+", plantName = "+plantName+", wateringDates = "+wateringDates+"]";
     }
 }

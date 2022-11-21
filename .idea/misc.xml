@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/activity_edit.xml" value="0.30055579307396324" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/activity_main.xml" value="0.30055579307396324" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/fragment_add.xml" value="0.30055579307396324" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/fragment_pot.xml" value="0.30055579307396324" />
         <entry key="..\:/workspace_android/SmartWatering4/app/src/main/res/drawable/black_button.xml" value="0.21" />
         <entry key="..\:/workspace_android/SmartWatering4/app/src/main/res/drawable/black_indicator.xml" value="0.21" />
         <entry key="..\:/workspace_android/SmartWatering4/app/src/main/res/drawable/gray_indicator.xml" value="0.21" />

@@ -1,24 +1,32 @@
 package com.example.smartpot;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+
+import com.bumptech.glide.Glide;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PotFragment extends Fragment {
 
 
-    public static PotFragment newInstance(String serialId, Integer humidity, Integer soil_humidity, Integer temper, Integer waterLevel, String potName, String plantName, Integer period, String imageUrl, LocalDateTime wateringDate) {
+    public static PotFragment newInstance(String serialId, Integer humidity, Integer soil_humidity, Integer temper, Integer waterLevel, String potName, String plantName, Integer period, String imageUrl, LocalDateTime[] wateringDates) {
         if(serialId == null) serialId = "";
         if(humidity == null) humidity = 0;
         if(soil_humidity == null) soil_humidity = 0;
@@ -28,7 +36,14 @@ public class PotFragment extends Fragment {
         if(plantName == null) plantName = "";
         if(period == null) period = 0;
         if(imageUrl == null) imageUrl = "";
-        if(wateringDate == null) wateringDate = LocalDateTime.parse("0000-00-00", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if(wateringDates == null) wateringDates = new LocalDateTime[0];
+        ArrayList<String> wateringDateList = new ArrayList<>();
+        if(wateringDates.length > 0) {
+            for(int i = 0; i < wateringDates.length; i++) {
+                wateringDateList.add(wateringDates[i].format(DateTimeFormatter.ofPattern("MM월 dd일 HH시mm분")));
+            }
+        }
+
 
 
         PotFragment potFragment = new PotFragment();
@@ -42,7 +57,8 @@ public class PotFragment extends Fragment {
         bundle.putString("plantName", plantName);
         bundle.putInt("period", period);
         bundle.putString("imageUrl", imageUrl);
-        bundle.putString("wateringDate", wateringDate.format(DateTimeFormatter.ofPattern("MM월 dd일 HH시mm분")));
+        //bundle.putString("wateringDate", wateringDate.format(DateTimeFormatter.ofPattern("MM월 dd일 HH시mm분")));
+        bundle.putStringArrayList("wateringDate", wateringDateList);
         potFragment.setArguments(bundle);
         return potFragment;
     }
@@ -67,18 +83,20 @@ public class PotFragment extends Fragment {
         TextView tvTemper = view.findViewById(R.id.tv_Temper);
         TextView tvWaterLevel = view.findViewById(R.id.tv_WaterLevel);
         TextView tvPeriod = view.findViewById(R.id.tv_Period);
-        TextView tvWateringDate = view.findViewById(R.id.tv_wateringDate);
+        ImageView imgVPotImage = view.findViewById(R.id.imgV_PotImage);
+        Button btnViewWateringDate = view.findViewById(R.id.btn_ViewWateringDate);
         Button btnEdit = view.findViewById(R.id.btn_Edit);
 
         if (getArguments() != null) {
             String potName = getArguments().getString("potName");
             String plantName = getArguments().getString("plantName");
+            String imageUrl = getArguments().getString("imageUrl");
             int humidity = getArguments().getInt("humidity");
             int soil_humidity = getArguments().getInt("soil_humidity");
             int temper = getArguments().getInt("temper");
             int waterLevel = getArguments().getInt("waterLevel");
             int period = getArguments().getInt("period");
-            String wateringDate = getArguments().getString("wateringDate");
+
 
             tvPotName.setText(potName);
             tvPlantName.setText(plantName);
@@ -87,7 +105,32 @@ public class PotFragment extends Fragment {
             tvTemper.setText(Integer.toString(temper));
             tvWaterLevel.setText(Integer.toString(waterLevel));
             tvPeriod.setText(Integer.toString(period));
-            tvWateringDate.setText(wateringDate);
+            Glide.with(getContext()).load(imageUrl).error(R.drawable.defaultpot).into(imgVPotImage);
+
+            btnViewWateringDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ArrayList<String> wateringDatesList = new ArrayList<>();
+                    wateringDatesList = getArguments().getStringArrayList("wateringDate");
+                    String[] wateringDatesArr = wateringDatesList.toArray(new String[wateringDatesList.size()]);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("급수 기록");
+                    builder.setItems(wateringDatesArr, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    builder.setNegativeButton("닫기", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
 
         }
         btnEdit.setOnClickListener(new View.OnClickListener() {
