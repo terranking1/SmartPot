@@ -38,6 +38,11 @@ public class PotDTO
     @Expose
     private LocalDateTime[] wateringDates;
 
+    public PotDTO(String serialId, Integer period) {
+        this.serialId = serialId;
+        this.period = period;
+    }
+
     public String getSerialId() {
         return serialId;
     }

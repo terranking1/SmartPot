@@ -16,7 +16,8 @@
         <ImageView
             android:id="@+id/imgV_PotImage"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
+            android:layout_marginBottom="30dp"
             app:srcCompat="@drawable/defaultpot" />
 
         <LinearLayout
@@ -32,7 +33,7 @@
 
             <TextView
                 android:id="@+id/tv_PotName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
         </LinearLayout>
@@ -50,7 +51,7 @@
 
             <TextView
                 android:id="@+id/tv_PlantName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
         </LinearLayout>
@@ -68,7 +69,7 @@
 
             <TextView
                 android:id="@+id/tv_Humidity"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
         </LinearLayout>
@@ -86,7 +87,7 @@
 
             <TextView
                 android:id="@+id/tv_Soil_Humidity"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
         </LinearLayout>
@@ -104,7 +105,7 @@
 
             <TextView
                 android:id="@+id/tv_Temper"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
         </LinearLayout>
@@ -122,7 +123,7 @@
 
             <TextView
                 android:id="@+id/tv_WaterLevel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
 
@@ -136,14 +137,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="급수 주기 : "
                 android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/tv_Period"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
                 android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/btn_EditPeriod"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="변경" />
         </LinearLayout>
 
         <LinearLayout
