@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +36,7 @@ public class PotFragment extends Fragment {
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
 
-    public static PotFragment newInstance(String serialId, Integer humidity, Integer soil_humidity, Integer temper, Integer waterLevel, String potName, String plantName, Integer period, String imageUrl, LocalDateTime[] wateringDates) {
+    public static PotFragment newInstance(String serialId, Integer humidity, Integer soil_humidity, Integer temper, Integer waterLevel, String potName, String plantName, Integer period, String imageUrl, List<WateringDates> wateringDates) {
         if(serialId == null) serialId = "";
         if(humidity == null) humidity = 0;
         if(soil_humidity == null) soil_humidity = 0;
@@ -45,11 +46,11 @@ public class PotFragment extends Fragment {
         if(plantName == null) plantName = "";
         if(period == null) period = 0;
         if(imageUrl == null) imageUrl = "";
-        if(wateringDates == null) wateringDates = new LocalDateTime[0];
+        if(wateringDates == null) wateringDates = new ArrayList<>();
         ArrayList<String> wateringDateList = new ArrayList<>();
-        if(wateringDates.length > 0) {
-            for(int i = 0; i < wateringDates.length; i++) {
-                wateringDateList.add(wateringDates[i].format(DateTimeFormatter.ofPattern("MM월 dd일 HH시mm분")));
+        if(wateringDates.size() > 0) {
+            for(int i = 0; i < wateringDates.size(); i++) {
+                wateringDateList.add(wateringDates.get(i).getWateringDate().format(DateTimeFormatter.ofPattern("MM월 dd일 HH시 mm분 ss초")));
             }
         }
 
@@ -114,10 +115,10 @@ public class PotFragment extends Fragment {
 
 
             tvPotName.setText(potName);
-            tvPlantName.setText(plantName);
-            tvHumidity.setText(Integer.toString(humidity));
-            tvSoilHumidity.setText(Integer.toString(soil_humidity));
-            tvTemper.setText(Integer.toString(temper));
+            tvPlantName.setText("[" + plantName + "]");
+            tvHumidity.setText(Integer.toString(humidity) + "%");
+            tvSoilHumidity.setText(Integer.toString(soil_humidity) + "%");
+            tvTemper.setText(Integer.toString(temper) + "°");
             tvWaterLevel.setText(Integer.toString(waterLevel));
             tvPeriod.setText(Integer.toString(period));
             Glide.with(getContext()).load(imageUrl).error(R.drawable.defaultpot).into(imgVPotImage);
@@ -155,10 +156,18 @@ public class PotFragment extends Fragment {
             btnViewWateringDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ArrayList<String> wateringDatesList = new ArrayList<>();
+                    List<String> wateringDatesList = new ArrayList<>();
+                    List<String> wateringDatesList5 = new ArrayList<>(5);
+                    String[] wateringDatesArr;
                     wateringDatesList = getArguments().getStringArrayList("wateringDate");
-                    String[] wateringDatesArr = wateringDatesList.toArray(new String[wateringDatesList.size()]);
+                    if(wateringDatesList.size() > 5) {
+                        wateringDatesList5 = wateringDatesList.subList(wateringDatesList.size()-5, wateringDatesList.size());
+                        wateringDatesArr = wateringDatesList5.toArray(new String[wateringDatesList5.size()]);
+                    }else {
+                        wateringDatesArr = wateringDatesList.toArray(new String[wateringDatesList.size()]);
+                    }
 
+                    Log.d("test", Arrays.asList(wateringDatesArr).toString());
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("급수 기록");
                     builder.setItems(wateringDatesArr, new DialogInterface.OnClickListener() {
@@ -177,16 +186,22 @@ public class PotFragment extends Fragment {
                 }
             });
 
-        }
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), EditActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
+            btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), EditActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.putExtra("serialId", serialId);
+                    intent.putExtra("potName", potName);
+                    intent.putExtra("plantName", plantName);
+                    intent.putExtra("imageUrl", imageUrl);
+                    startActivity(intent);
 
-            }
-        });
+                }
+            });
+
+        }
+
         return view;
     }
 }

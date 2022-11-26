@@ -29,5 +29,7 @@ public interface initMyApi {
 
     @Multipart
     @POST("/pot/potSetting")
-    Call<PotDTO> setPot(@Part MultipartBody.Part imageFile, @PartMap HashMap<String, RequestBody> data);
+    Call<PotDTO> setPot(
+            @PartMap HashMap<String, RequestBody> data,
+            @Part() MultipartBody.Part imageFile);
 }

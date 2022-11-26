@@ -1,15 +1,17 @@
 package com.example.smartpot;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
     initMyApi initMyApi;
     ViewPager2 viewPager2;
 
-    Button btnAddPlant;
+
+    ArrayList<Fragment> fragments = new ArrayList<>();
+    ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter(MainActivity.this, fragments);
+    CircleIndicator3 indicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +44,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         viewPager2 = (ViewPager2) findViewById(R.id.viewPager2_container);
-        btnAddPlant = findViewById(R.id.btn_AddPlant);
+        indicator = (CircleIndicator3) findViewById(R.id.indicator);
 
-
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        ViewPager2Adapter viewPager2Adapter = new ViewPager2Adapter(MainActivity.this, fragments);
-        CircleIndicator3 indicator = (CircleIndicator3) findViewById(R.id.indicator);
-        indicator.setViewPager(viewPager2);
+        fragments = new ArrayList<>();
+        viewPager2Adapter = new ViewPager2Adapter(MainActivity.this, fragments);
 
         //레트로핏으로 plant 불러오기
         retrofitClient = RetrofitClient.getInstance();
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                             String plantName = (String) potDTO.get(i).getPlantName();
                             Integer period = (Integer) potDTO.get(i).getPeriod();
                             String imageUrl = (String) potDTO.get(i).getImageUrl();
-                            LocalDateTime[] wateringDates = (LocalDateTime[]) potDTO.get(i).getWateringDates();
+                            List<WateringDates> wateringDates = new ArrayList<>(potDTO.get(i).getWateringDates());
 
                             if(SerialList.contains(serialId)) {
                                 fragments.add(PotFragment.newInstance(serialId, humidity, soil_humidity, temper, waterLevel, potName, plantName, period, imageUrl, wateringDates));
@@ -95,17 +97,24 @@ public class MainActivity extends AppCompatActivity {
                 FileOutputStream fos = openFileOutput("serial.txt", MODE_APPEND);
                 fos.close();
             } catch (Exception ex) {
-                e.printStackTrace();
+                ex.printStackTrace();
             }
         }
+        viewPager2.setAdapter(viewPager2Adapter);;
+        indicator.setViewPager(viewPager2);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
-
-
-
-        btnAddPlant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int curId = item.getItemId();
+        switch(curId){
+            case R.id.menu_add:
                 EditText edSerial = new EditText(MainActivity.this);
 
 
@@ -148,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                                     String plantName = (String) potDTO.get(i).getPlantName();
                                                     Integer period = (Integer) potDTO.get(i).getPeriod();
                                                     String imageUrl = (String) potDTO.get(i).getImageUrl();
-                                                    LocalDateTime[] wateringDates = (LocalDateTime[]) potDTO.get(i).getWateringDates();
+                                                    List<WateringDates> wateringDates = new ArrayList<>(potDTO.get(i).getWateringDates());
 
                                                     try {
                                                         FileOutputStream fos = openFileOutput("serial.txt", MODE_APPEND);
@@ -180,8 +189,10 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-
                             fis.close();
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
                         } catch (IOException e) {
                             Toast.makeText(getApplicationContext(), "파일 없음",
                                     Toast.LENGTH_SHORT).show();
@@ -196,10 +207,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 dialog.show();
-            }
-        });
-        viewPager2.setAdapter(viewPager2Adapter);;
-        indicator.setViewPager(viewPager2);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
 }

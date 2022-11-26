@@ -3,7 +3,7 @@ package com.example.smartpot;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 public class PotDTO
 {
@@ -36,7 +36,7 @@ public class PotDTO
     private String imageUrl;
     @SerializedName("wateringDates")
     @Expose
-    private LocalDateTime[] wateringDates;
+    private List<WateringDates> wateringDates;
 
     public PotDTO(String serialId, Integer period) {
         this.serialId = serialId;
@@ -115,9 +115,9 @@ public class PotDTO
         this.imageUrl = imageUrl;
     }
 
-    public LocalDateTime[] getWateringDates() { return wateringDates; }
+    public List<WateringDates> getWateringDates() { return wateringDates; }
 
-    public void setWateringDates(LocalDateTime[] wateringDates) {
+    public void setWateringDates(List<WateringDates> wateringDates) {
         this.wateringDates = wateringDates;
     }
 

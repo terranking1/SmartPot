@@ -3,10 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/drawable/black_button.xml" value="0.212" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/drawable/black_indicator.xml" value="0.2115" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/drawable/gray_indicator.xml" value="0.2115" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/drawable/red_button.xml" value="0.212" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/drawable/selector_indicator.xml" value="0.2115" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/font/font.xml" value="0.3212325875897003" />
         <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/activity_edit.xml" value="0.30055579307396324" />
         <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/activity_main.xml" value="0.30055579307396324" />
         <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/fragment_add.xml" value="0.30055579307396324" />
         <entry key="..\:/workspace_android/SmartPot/app/src/main/res/layout/fragment_pot.xml" value="0.30055579307396324" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/menu/menu.xml" value="0.30055579307396324" />
+        <entry key="..\:/workspace_android/SmartPot/app/src/main/res/xml/network_security_config.xml" value="0.15391192817443353" />
         <entry key="..\:/workspace_android/SmartWatering4/app/src/main/res/drawable/black_button.xml" value="0.21" />
         <entry key="..\:/workspace_android/SmartWatering4/app/src/main/res/drawable/black_indicator.xml" value="0.21" />
         <entry key="..\:/workspace_android/SmartWatering4/app/src/main/res/drawable/gray_indicator.xml" value="0.21" />
