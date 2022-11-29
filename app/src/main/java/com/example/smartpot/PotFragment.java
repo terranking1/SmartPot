@@ -2,6 +2,7 @@ package com.example.smartpot;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -36,6 +38,7 @@ public class PotFragment extends Fragment {
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static PotFragment newInstance(String serialId, Integer humidity, Integer soil_humidity, Integer temper, Integer waterLevel, String potName, String plantName, Integer period, String imageUrl, List<WateringDates> wateringDates) {
         if(serialId == null) serialId = "";
         if(humidity == null) humidity = 0;
@@ -115,7 +118,11 @@ public class PotFragment extends Fragment {
 
 
             tvPotName.setText(potName);
-            tvPlantName.setText("[" + plantName + "]");
+            if(plantName.equals("")) {
+                tvPlantName.setText("");
+            } else {
+                tvPlantName.setText("[" + plantName + "]");
+            }
             tvHumidity.setText(Integer.toString(humidity) + "%");
             tvSoilHumidity.setText(Integer.toString(soil_humidity) + "%");
             tvTemper.setText(Integer.toString(temper) + "°");
@@ -147,6 +154,12 @@ public class PotFragment extends Fragment {
 
                                 }
                             });
+                        }
+                    });
+                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
                         }
                     });
                     builder.show();

@@ -208,6 +208,13 @@ public class MainActivity extends AppCompatActivity {
                 });
                 dialog.show();
                 break;
+            case R.id.menu_refresh:
+                Intent refreshIntent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(refreshIntent);
+                break;
+            case R.id.menu_search:
+                Intent searchIntent = new Intent(MainActivity.this, PlantActivity.class);
+                startActivity(searchIntent);
             default:
                 break;
         }

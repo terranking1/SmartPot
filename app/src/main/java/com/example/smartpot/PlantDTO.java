@@ -21,6 +21,14 @@ public class PlantDTO
     @Expose
     private String sunlight;
 
+    public PlantDTO(String name, String period, String humidity, String temper, String sunlight) {
+        this.name = name;
+        this.period = period;
+        this.humidity = humidity;
+        this.temper = temper;
+        this.sunlight = sunlight;
+    }
+
     public String getPeriod ()
     {
         return period;

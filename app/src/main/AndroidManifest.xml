@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.smartpot">\
+    package="com.example.smartpot">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_onlypicture"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_onlypicture_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.SmartPot">
+        android:theme="@style/Theme.SmartPot"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name="com.example.smartpot.EditActivity"
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlantGuideActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="com.example.smartpot.MainActivity"
+            android:name=".LogoActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
