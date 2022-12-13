@@ -34,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PotFragment extends Fragment {
+    private static String serverUrl = "http://3.38.63.85:8081/";
+    private static String arduinoUrl = "http://";
 
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
@@ -90,7 +92,7 @@ public class PotFragment extends Fragment {
         View view = LayoutInflater.from(inflater.getContext()).inflate(R.layout.fragment_pot, container, false);
 
         //레트로핏으로 plant 불러오기
-        retrofitClient = RetrofitClient.getInstance();
+        retrofitClient = RetrofitClient.getInstance(serverUrl);
         initMyApi = RetrofitClient.getRetrofitInterface();
 
         TextView tvPotName = view.findViewById(R.id.tv_PotName);
@@ -127,7 +129,7 @@ public class PotFragment extends Fragment {
             tvSoilHumidity.setText(Integer.toString(soil_humidity) + "%");
             tvTemper.setText(Integer.toString(temper) + "°");
             tvWaterLevel.setText(Integer.toString(waterLevel));
-            tvPeriod.setText(Integer.toString(period));
+            tvPeriod.setText(Integer.toString(period) + "일");
             Glide.with(getContext()).load(imageUrl).error(R.drawable.defaultpot).into(imgVPotImage);
 
             btnEditPeriod.setOnClickListener(new View.OnClickListener() {

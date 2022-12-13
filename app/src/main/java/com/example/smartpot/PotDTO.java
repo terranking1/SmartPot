@@ -38,6 +38,10 @@ public class PotDTO
     @Expose
     private List<WateringDates> wateringDates;
 
+    public PotDTO(String serialId) {
+        this.serialId = serialId;
+    }
+
     public PotDTO(String serialId, Integer period) {
         this.serialId = serialId;
         this.period = period;

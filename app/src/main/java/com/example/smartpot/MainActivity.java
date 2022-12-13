@@ -29,6 +29,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+    private static String serverUrl = "http://3.38.63.85:8081/";
+    private static String arduinoUrl = "http://test:8081/";
+
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
     ViewPager2 viewPager2;
@@ -49,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
         fragments = new ArrayList<>();
         viewPager2Adapter = new ViewPager2Adapter(MainActivity.this, fragments);
 
-        //레트로핏으로 plant 불러오기
-        retrofitClient = RetrofitClient.getInstance();
+        retrofitClient = RetrofitClient.getInstance(serverUrl);
         initMyApi = RetrofitClient.getRetrofitInterface();
 
         try {
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
             String ReadSerial = new String(txt).trim();
             String[] SerialArr = ReadSerial.split(" ");
             List<String> SerialList = new ArrayList<>(Arrays.asList(SerialArr));
+
+
 
             initMyApi.getPotDTO().enqueue(new Callback<List<PotDTO>>() {
                 @Override
@@ -121,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("시리얼 넘버 입력");
                 dialog.setView(edSerial);
-                dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                dialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -169,8 +173,25 @@ public class MainActivity extends AppCompatActivity {
                                                     }
 
                                                     fragments.add(PotFragment.newInstance(serialId, humidity, soil_humidity, temper, waterLevel, potName, plantName, period, imageUrl, wateringDates));
-                                                }
 
+                                                    //아두이노에 serialId 보내기
+                                                    retrofitClient = RetrofitClient.removeInstance();
+
+                                                    retrofitClient = RetrofitClient.getInstance(arduinoUrl);
+                                                    initMyApi = RetrofitClient.getRetrofitInterface();
+
+                                                    initMyApi.sendSerialId(new PotDTO(serialId)).enqueue(new Callback<PotDTO>() {
+                                                        @Override
+                                                        public void onResponse(Call<PotDTO> call, Response<PotDTO> response) {
+                                                            Log.d("sendSerialId", response.toString());
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<PotDTO> call, Throwable t) {
+                                                            Log.e("sendSerialId", t.getMessage());
+                                                        }
+                                                    });
+                                                }
                                                 //뷰페이저 적용
                                                 viewPager2.setAdapter(viewPager2Adapter);
                                                 indicator.setViewPager(viewPager2);
@@ -191,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                             fis.close();
                             Intent intent = getIntent();
-                            finish();
                             startActivity(intent);
                         } catch (IOException e) {
                             Toast.makeText(getApplicationContext(), "파일 없음",
@@ -200,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-                dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                dialog.setPositiveButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         return;

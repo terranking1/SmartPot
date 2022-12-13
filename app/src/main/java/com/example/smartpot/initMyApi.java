@@ -27,6 +27,10 @@ public interface initMyApi {
     @POST("/pot/setPeriod")
     Call<PotDTO> setPeriod(@Body PotDTO body);
 
+    @Headers({"Content-Type: application/json"})
+    @POST("/init")
+    Call<PotDTO> sendSerialId(@Body PotDTO body);
+
     @Multipart
     @POST("/pot/potSetting")
     Call<PotDTO> setPot(

@@ -6,10 +6,14 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +50,9 @@ import retrofit2.http.Multipart;
 
 public class EditActivity extends AppCompatActivity {
 
+    private static String serverUrl = "http://3.38.63.85:8081/";
+    private static String arduinoUrl = "http://";
+
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
 
@@ -52,6 +60,12 @@ public class EditActivity extends AppCompatActivity {
     Button btnEditOK, btnFindImage, btnDelete;
     ImageView imgVEditImage;
     MultipartBody.Part uploadFile ;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
+    int findImageCount;
+    String myStrUri;
+    Uri myUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +73,11 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         //레트로핏으로 plant 불러오기
-        retrofitClient = RetrofitClient.getInstance();
+        retrofitClient = RetrofitClient.getInstance(serverUrl);
         initMyApi = RetrofitClient.getRetrofitInterface();
+
+        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        editor = pref.edit();
 
         edPotName = findViewById(R.id.ed_PotName);
         edPlantName = findViewById(R.id.ed_PlantName);
@@ -68,6 +85,7 @@ public class EditActivity extends AppCompatActivity {
         btnEditOK = findViewById(R.id.btn_EditOK);
         btnDelete = findViewById(R.id.btn_Delete);
         imgVEditImage = findViewById(R.id.imgV_EditImage);
+        findImageCount = 0;
 
         Intent intent = getIntent();
         String GetSerialId = intent.getStringExtra("serialId");
@@ -113,7 +131,7 @@ public class EditActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<PotDTO> call, Throwable t) {
-
+                        Log.e("setPot", t.getMessage());
                     }
                 });
             }
@@ -122,25 +140,40 @@ public class EditActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    FileInputStream fis = openFileInput("serial.txt");
-                    byte[] txt = new byte[1000];
-                    fis.read(txt);
-                    String ReadSerial = new String(txt).replace(GetSerialId+" ", "").trim();
-                    try {
-                        FileOutputStream fos = openFileOutput("serial.txt", MODE_PRIVATE);
-                        fos.write(ReadSerial.getBytes());
-                        fos.write(" ".getBytes());
-                        fos.close();
-                        Intent intent = new Intent(EditActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(EditActivity.this);
+                dialog.setTitle("화분을 정말 삭제하시겠습니까?");
+                dialog.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            FileInputStream fis = openFileInput("serial.txt");
+                            byte[] txt = new byte[1000];
+                            fis.read(txt);
+                            String ReadSerial = new String(txt).replace(GetSerialId+" ", "").trim();
+                            try {
+                                FileOutputStream fos = openFileOutput("serial.txt", MODE_PRIVATE);
+                                fos.write(ReadSerial.getBytes());
+                                fos.write(" ".getBytes());
+                                fos.close();
+                                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        } catch (IOException e) {
+                            Toast.makeText(getApplicationContext(), "파일 없음",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } catch (IOException e) {
-                    Toast.makeText(getApplicationContext(), "파일 없음",
-                            Toast.LENGTH_SHORT).show();
-                }
+                });
+                dialog.setPositiveButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.show();
+
             }
         });
 
@@ -157,7 +190,6 @@ public class EditActivity extends AppCompatActivity {
                     {
                         Intent intent = result.getData();
                         Uri uri = intent.getData();
-//                        imageview.setImageURI(uri);
                         Glide.with(EditActivity.this)
                                 .load(uri)
                                 .into(imgVEditImage);
@@ -176,6 +208,10 @@ public class EditActivity extends AppCompatActivity {
                         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), byteArrayOutputStream.toByteArray());
                         uploadFile = MultipartBody.Part.createFormData("imageFile", file.getName() ,requestBody);
 
+                        editor.putString("MyUploadFile", uri.toString());
+                        editor.apply();
+
+                        findImageCount = 1;
                     }
                 }
             });

@@ -17,6 +17,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PlantActivity extends AppCompatActivity {
+    private static String serverUrl = "http://3.38.63.85:8081/";
+    private static String arduinoUrl = "http://";
 
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
@@ -32,7 +34,7 @@ public class PlantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_plant);
 
         //레트로핏으로 plant 불러오기
-        retrofitClient = RetrofitClient.getInstance();
+        retrofitClient = RetrofitClient.getInstance(serverUrl);
         initMyApi = RetrofitClient.getRetrofitInterface();
 
         listView = findViewById(R.id.listView);
